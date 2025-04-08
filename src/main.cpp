@@ -32,6 +32,7 @@ class ArbolClan{
         Node *buscarLider(Node* liderActual);
         Node *buscarSucesor(Node *liderActual);
         void mostrarMiembrosClan(Node *actual);
+        Node *buscarNodo(Node *actual, int id);
 
     public:
         ArbolClan(): root(nullptr){};
@@ -44,7 +45,7 @@ class ArbolClan{
         void asesinarLider();
         void asignarLider();
         void mostrarMiembros();
-        void actualizarDatos();
+        void actualizarDatos(int id, const string &name, const string &last_name, char gender, int age, bool is_dead, bool was_chief, bool is_chief);
 };
 
 bool ArbolClan::insertarNodo(Node *&actual, Node *newNode){
@@ -218,6 +219,40 @@ void ArbolClan::mostrarMiembrosClan(Node* actual) {
     mostrarMiembrosClan(actual->right);
 }
 
+void ArbolClan::actualizarDatos(int id, const string &name, const string &last_name, char gender, int age, bool is_dead, bool was_chief, bool is_chief){
+    Node *node = buscarNodo(root, id);
+    if (node == nullptr){
+        cout << "Miembro con ID " << id << " no encontrado" << endl;
+        return;
+    }
+
+    node->name = name;
+    node->last_name = last_name;
+    node->gender = gender;
+    node->age = age;
+    node->is_dead = is_dead;
+    node->was_chief = was_chief;
+    node->is_chief = is_chief;
+
+    cout << "Datos actualizados para la Nodea con ID " << id << ":" << endl;
+    cout << "Nombre: " << node->name << " " << node->last_name << endl;
+    cout << "Género: " << node->gender << endl;
+    cout << "Edad: " << node->age << endl;
+    cout << "Muerto: " << node->is_dead << endl;
+    cout << "Fue Lider: " << node->was_chief << endl;
+    cout << "Es Lider: " << node->is_chief << endl;
+}
+
+Node *ArbolClan::buscarNodo(Node *current, int id){
+    if (current == nullptr)
+        return nullptr;
+    if (current->id == id)
+        return current;
+    Node *found = buscarNodo(current->left, id);
+    if (found == nullptr)
+        found = buscarNodo(current->right, id);
+    return found;
+}
 
 int main(){
     ArbolClan clan;
@@ -253,7 +288,31 @@ int main(){
                 clan.mostrarMiembros();
                 break;
             case 5: {
-                //Modificar datos de Nodea
+                //Modificar datos de Nodo
+                int id;
+                string name, last_name;
+                char gender;
+                int age;
+                bool is_dead, was_chief, is_chief;
+
+                cout << "Ingrese el ID de la persona a actualizar: ";
+                cin >> id;
+                cout << "Ingrese el nuevo nombre: ";
+                cin >> name;
+                cout << "Ingrese el nuevo apellido: ";
+                cin >> last_name;
+                cout << "Ingrese el nuevo genero (M/F): ";
+                cin >> gender;
+                cout << "Ingrese la nueva edad: ";
+                cin >> age;
+                cout << "Esta muerto? (1 para si, 0 para no): ";
+                cin >> is_dead;
+                cout << "Fue lider? (1 para si, 0 para no): ";
+                cin >> was_chief;
+                cout << "Es lider? (1 para si, 0 para no): ";
+                cin >> is_chief;
+
+                clan.actualizarDatos(id, name, last_name, gender, age, is_dead, was_chief, is_chief);
                 break;
             }
             case 6:
