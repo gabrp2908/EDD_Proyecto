@@ -31,6 +31,7 @@ class ArbolClan{
         void borrarArbol(Node* node);
         Node *buscarLider(Node* liderActual);
         Node *buscarSucesor(Node *liderActual);
+        void mostrarMiembrosClan(Node *actual);
 
     public:
         ArbolClan(): root(nullptr){};
@@ -198,6 +199,26 @@ Node *ArbolClan::buscarSucesor(Node *actual){
     return sucesor;
 }
 
+
+void ArbolClan::mostrarMiembros() {
+    cout << "Lista de todos los miembros de la familia real:" << endl;
+    mostrarMiembrosClan(root);
+}
+
+void ArbolClan::mostrarMiembrosClan(Node* actual) {
+    if (actual == nullptr) return;
+
+    cout << "ID: " << actual->id << ", Nombre: " << actual->name << " " << actual->last_name
+        << ", Genero: " << actual->gender << ", Edad: " << actual->age
+        << ", ID Padre: " << actual->id_father << ", Muerto: " << (actual->is_dead ? "Si" : "No")
+        << ", Fue Lider: " << (actual->was_chief ? "Si" : "No") 
+        << ", Es Lider: " << (actual->is_chief ? "Si" : "No") << endl;
+
+    mostrarMiembrosClan(actual->left);
+    mostrarMiembrosClan(actual->right);
+}
+
+
 int main(){
     ArbolClan clan;
     clan.leerArchivo("data_clan.csv");
@@ -229,6 +250,7 @@ int main(){
                 break;
             case 4:
                 //Mostrar todos los miembros
+                clan.mostrarMiembros();
                 break;
             case 5: {
                 //Modificar datos de Nodea
