@@ -29,6 +29,8 @@ class ArbolClan{
         Node *root;
         bool insertarNodo(Node *&actual, Node *newNode);
         void borrarArbol(Node* node);
+        Node *buscarLider(Node* liderActual);
+        Node *buscarSucesor(Node *liderActual);
 
     public:
         ArbolClan(): root(nullptr){};
@@ -39,7 +41,7 @@ class ArbolClan{
         void mostrarSucesionActual(Node *actual);
         void mostrarLiderActual_Sucesor();
         void asesinarLider();
-        void asignar_NuevoLider();
+        void asignarLider();
         void mostrarMiembros();
         void actualizarDatos();
 };
@@ -106,21 +108,21 @@ void ArbolClan::leerArchivo(const string &filename){
         bool is_dead, was_chief, is_chief;
         string name, last_name;
 
-        getline(ss, field, ',');
+        getline(ss, field, ';');
         id = stoi(field);
-        getline(ss, name, ',');
-        getline(ss, last_name, ',');
-        getline(ss, field, ',');
+        getline(ss, name, ';');
+        getline(ss, last_name, ';');
+        getline(ss, field, ';');
         gender = field[0];
-        getline(ss, field, ',');
+        getline(ss, field, ';');
         age = stoi(field);
-        getline(ss, field, ',');
+        getline(ss, field, ';');
         id_father = stoi(field);
-        getline(ss, field, ',');
+        getline(ss, field, ';');
         is_dead = stoi(field);
-        getline(ss, field, ',');
+        getline(ss, field, ';');
         was_chief = stoi(field);
-        getline(ss, field, ',');
+        getline(ss, field, ';');
         is_chief = stoi(field);
 
         Node *newNode = new Node(id, name, last_name, gender, age, id_father, is_dead, was_chief, is_chief);
@@ -148,6 +150,54 @@ void ArbolClan::mostrarSucesionActual(Node *actual){
     mostrarSucesionActual(actual->right);
 }
 
+void ArbolClan::mostrarLiderActual_Sucesor(){
+    Node *liderActual = buscarLider(root);
+    if (liderActual == nullptr){
+        cout << "Actualmente no hay un lider asignado." << endl;
+        return;
+    }
+    cout << "Lider actual: " << liderActual->name << " " << liderActual->last_name << endl;
+    Node *sucesor = buscarSucesor(liderActual->left);
+    if (!sucesor)
+        sucesor = buscarSucesor(liderActual->right);
+    if (sucesor){
+        cout << "Sucesor: " << sucesor->name << " " << sucesor->last_name << endl;
+    }
+    else{
+        cout << "No se encontro sucesor valido en la rama actual." << endl;
+    }
+}
+
+void ArbolClan::asignarLider() {
+        Node* liderActual = buscarLider(root);
+        if (liderActual == nullptr) {
+            cout << "No hay lider actual." << endl;
+            return;
+        }
+}
+
+Node *ArbolClan::buscarLider(Node *actual){
+    if (actual == nullptr)
+        return nullptr;
+    if (actual->is_chief)
+        return actual;
+    Node *chief = buscarLider(actual->left);
+    if (chief == nullptr)
+        chief = buscarLider(actual->right);
+    return chief;
+}
+
+Node *ArbolClan::buscarSucesor(Node *actual){
+    if (actual == nullptr)
+        return nullptr;
+    if (!actual->is_dead && actual->gender == 'H')
+        return actual;
+    Node *sucesor = buscarSucesor(actual->left);
+    if (sucesor == nullptr)
+        sucesor = buscarSucesor(actual->right);
+    return sucesor;
+}
+
 int main(){
     ArbolClan clan;
     clan.leerArchivo("data_clan.csv");
@@ -159,7 +209,7 @@ int main(){
         cout << "2. Imprimir lider actual y sucesor\n";
         cout << "3. Asesinar al lider y asignar nuevo\n";
         cout << "4. Imprimir todos los miembros del clan\n";
-        cout << "5. Actualizar datos de una Nodea\n";
+        cout << "5. Actualizar datos de un Nodo\n";
         cout << "6. Visualizar lista de contribuidores al clan\n";
         cout << "7. Salir\n";
         cout << "Seleccione una opcion: ";
@@ -172,6 +222,7 @@ int main(){
                 break;
             case 2:
                 //Mostrar datos de lider actual y su sucesor
+                clan.mostrarLiderActual_Sucesor();
                 break;
             case 3:
                 //Asesinar al lider actual y asignar uno nuevo
