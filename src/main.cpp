@@ -189,15 +189,12 @@ Node *ArbolClan::buscarLider(Node *actual){
     return chief;
 }
 
-Node *ArbolClan::buscarSucesor(Node *actual){
-    if (actual == nullptr)
-        return nullptr;
-    if (!actual->is_dead && actual->gender == 'H')
-        return actual;
-    Node *sucesor = buscarSucesor(actual->left);
-    if (sucesor == nullptr)
-        sucesor = buscarSucesor(actual->right);
-    return sucesor;
+Node *ArbolClan::buscarSucesor(Node *actual) {
+    if (actual == nullptr) return nullptr;
+        if (!actual->is_dead && actual->gender == 'M') return actual;
+        Node* sucesor = buscarSucesor(actual->left);
+        if (sucesor == nullptr) sucesor = buscarSucesor(actual->right);
+        return sucesor;
 }
 
 
@@ -243,14 +240,14 @@ void ArbolClan::actualizarDatos(int id, const string &name, const string &last_n
     cout << "Es Lider: " << node->is_chief << endl;
 }
 
-Node *ArbolClan::buscarNodo(Node *current, int id){
-    if (current == nullptr)
+Node *ArbolClan::buscarNodo(Node *actual, int id){
+    if (actual == nullptr)
         return nullptr;
-    if (current->id == id)
-        return current;
-    Node *found = buscarNodo(current->left, id);
+    if (actual->id == id)
+        return actual;
+    Node *found = buscarNodo(actual->left, id);
     if (found == nullptr)
-        found = buscarNodo(current->right, id);
+        found = buscarNodo(actual->right, id);
     return found;
 }
 
