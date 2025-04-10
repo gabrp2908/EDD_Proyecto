@@ -5,7 +5,6 @@
 
 using namespace std;
 
-// Primero declarar Contribuidor antes de Node
 struct Contribuidor {
     string name;
     int age;
@@ -201,8 +200,15 @@ void ArbolClan::asesinarLider() {
         cout << "No hay lider actual." << endl;
         return;
     }
+    
+    // Marcar al líder como muerto y como ex-líder
     liderActual->is_dead = true;
-    cout << "El lider " << liderActual->name << " " << liderActual->last_name << " ha sido asesinado." << endl;
+    liderActual->was_chief = true;  // Actualizar was_chief a 1
+    liderActual->is_chief = false;  // Ya no es el líder actual
+    
+    cout << "El lider " << liderActual->name << " " << liderActual->last_name 
+         << " ha sido asesinado y ahora es un ex-líder." << endl;
+    
     asignarLider();
 }
 
