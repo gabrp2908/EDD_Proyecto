@@ -1,0 +1,13 @@
+﻿id_lider;nombre;edad;id_contribuidor;descripcion_contribucion;grado_contribucion
+1;Harvey;35;101;Entrenamiento de guerreros;8
+1;Leah;28;102;Suministro de alimentos;7
+2;Abigail;42;103;Construcción de fortificaciones;9
+2;Marnie;58;104;Entrenamiento de guerreros;2
+3;Robin;22;105;Suministro de alimentos;5
+3;Shane;52;106;Construcción de fortificaciones;1
+3;Sebastian;25;107;Entrenamiento de guerreros;3
+4;Penny;36;108;Suministro de alimentos;6
+4;Emily;44;109;Construcción de fortificaciones;9
+8;Rasmodius;21;110;Entrenamiento de guerreros;8
+9;Willy;85;111;Suministro de alimentos;4
+10;Leo;26;112;Construcción de fortificaciones;4
