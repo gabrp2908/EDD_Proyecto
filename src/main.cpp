@@ -42,12 +42,13 @@ struct Node{
 class ArbolClan{
     private:
         Node *root;
-        bool insertarNodo(Node *&actual, Node *newNode);
+        bool insertarNodo(Node *&liderActual, Node *newNode);
         void borrarArbol(Node* node);
         Node *buscarLider(Node* liderActual);
         Node *buscarSucesor(Node *liderActual);
-        void mostrarMiembrosClan(Node *actual);
-        Node *buscarNodo(Node *actual, int id);
+        void mostrarMiembrosClan(Node *liderActual);
+        void verificarEdadLider();
+        Node *buscarNodo(Node *liderActual, int id);
         Node *buscarTio(Node *liderActual);
         Node *ancestroConDosHijos(Node *liderActual);
         void cargarContribuidores(Node *node, const string &filename);
@@ -60,45 +61,45 @@ class ArbolClan{
         ~ArbolClan(){
             borrarArbol(root);}
         void leerArchivo(const string &filename);
-        void mostrarSucesionActual();
-        void mostrarSucesionActual(Node *actual);
-        void mostrarLiderActual_Sucesor();
+        void mostrarSucesionliderActual();
+        void mostrarSucesionliderActual(Node *liderActual);
+        void mostrarliderActual_Sucesor();
         void asesinarLider();
         void mostrarMiembros();
-        void actualizarDatos(int id, const string &name, const string &last_name, char gender, int age, bool is_dead, bool was_chief, bool is_chief);
+        void liderActualizarDatos(int id, const string &name, const string &last_name, char gender, int age, bool is_dead, bool was_chief, bool is_chief);
         void cargarTodosContribuidores(const string &filename);
         void mostrarContribuidoresLider();
 };
 
-bool ArbolClan::insertarNodo(Node *&actual, Node *newNode){
-    if (actual == nullptr){ //Si el arbol esta vacío
-        actual = newNode;
+bool ArbolClan::insertarNodo(Node *&liderActual, Node *newNode){
+    if (liderActual == nullptr){ //Si el arbol esta vacío
+        liderActual = newNode;
         cout << "Raiz del arbol: " << newNode->name << " " << newNode->last_name << endl;
         return true;
     }
 
-    if (actual->id == newNode->id_father){ //Si el id del nodo actual es igual al del padre
-        if (actual->left == nullptr){ //Si no tiene hijos se inserta a la izquierda
-            actual->left = newNode;
-            cout << "Hijo izquierdo de " << actual->name << " " << actual->last_name << ": " << newNode->name << " " << newNode->last_name << endl;
+    if (liderActual->id == newNode->id_father){ //Si el id del nodo liderActual es igual al del padre
+        if (liderActual->left == nullptr){ //Si no tiene hijos se inserta a la izquierda
+            liderActual->left = newNode;
+            cout << "Hijo izquierdo de " << liderActual->name << " " << liderActual->last_name << ": " << newNode->name << " " << newNode->last_name << endl;
         }
         else{ //Si ya tiene un hijo, inserta a la derecha
-            Node *child = actual->left;
+            Node *child = liderActual->left;
             while (child->right != nullptr){
                 child = child->right;
             }
             child->right = newNode;
-            cout << "Hijo derecho de " << actual->name << " " << actual->last_name << ": " << newNode->name << " " << newNode->last_name << endl;
+            cout << "Hijo derecho de " << liderActual->name << " " << liderActual->last_name << ": " << newNode->name << " " << newNode->last_name << endl;
         }
         return true;
     }
 
     bool inserted = false;
-    if (actual->left != nullptr){
-        inserted = insertarNodo(actual->left, newNode);
+    if (liderActual->left != nullptr){
+        inserted = insertarNodo(liderActual->left, newNode);
     }
-    if (!inserted && actual->right != nullptr){
-        inserted = insertarNodo(actual->right, newNode);
+    if (!inserted && liderActual->right != nullptr){
+        inserted = insertarNodo(liderActual->right, newNode);
     }
 
     return inserted;
@@ -116,7 +117,7 @@ void ArbolClan::borrarArbol(Node* node) {
 void ArbolClan::leerArchivo(const string &filename){
     ifstream file(filename);
     if (!file.is_open()){
-        cerr << "Error al abrir el archivo." << endl;
+        cerr << "Error al abrir el archivo" << endl;
         return;
     }
 
@@ -160,25 +161,25 @@ void ArbolClan::leerArchivo(const string &filename){
     file.close();
 }
 
-void ArbolClan::mostrarSucesionActual(){
+void ArbolClan::mostrarSucesionliderActual(){
     cout << "Lista de familiares vivos:" << endl;
-    mostrarSucesionActual(root);
+    mostrarSucesionliderActual(root);
 }
 
-void ArbolClan::mostrarSucesionActual(Node *actual){
-    if (actual == nullptr)
+void ArbolClan::mostrarSucesionliderActual(Node *liderActual){
+    if (liderActual == nullptr)
         return;
-    if (!actual->is_dead){
-        cout << actual->name << " " << actual->last_name << " (ID: " << actual->id << ")" << endl;
+    if (!liderActual->is_dead){
+        cout << liderActual->name << " " << liderActual->last_name << " (ID: " << liderActual->id << ")" << endl;
     }
-    mostrarSucesionActual(actual->left);
-    mostrarSucesionActual(actual->right);
+    mostrarSucesionliderActual(liderActual->left);
+    mostrarSucesionliderActual(liderActual->right);
 }
 
-void ArbolClan::mostrarLiderActual_Sucesor(){
+void ArbolClan::mostrarliderActual_Sucesor(){
     Node *liderActual = buscarLider(root);
     if (liderActual == nullptr){
-        cout << "Actualmente no hay un lider asignado." << endl;
+        cout << "lActualmente no hay un lider asignado" << endl;
         return;
     }
     cout << "Lider actual: " << liderActual->name << " " << liderActual->last_name << endl;
@@ -189,14 +190,14 @@ void ArbolClan::mostrarLiderActual_Sucesor(){
         cout << "Sucesor: " << sucesor->name << " " << sucesor->last_name << endl;
     }
     else{
-        cout << "No se encontro sucesor valido en la rama actual." << endl;
+        cout << "No se encontro sucesor valido en la rama actual" << endl;
     }
 }
 
 void ArbolClan::asesinarLider() {
     Node* liderActual = buscarLider(root);
     if (liderActual == nullptr) {
-        cout << "No hay lider actual." << endl;
+        cout << "No hay lider actual" << endl;
         return;
     }
     
@@ -246,29 +247,37 @@ void ArbolClan::asesinarLider() {
         if (siguienteSucesor != nullptr) {
             cout << "Siguiente sucesor: " << siguienteSucesor->name << " " << siguienteSucesor->last_name << endl;
         } else {
-            cout << "No se encontro siguiente sucesor valido." << endl;
+            cout << "No se encontro siguiente sucesor valido" << endl;
         }
     } else {
-        cout << "No se pudo encontrar un sucesor valido para el lider." << endl;
+        cout << "No se pudo encontrar un sucesor valido para el lider" << endl;
     }
 }
 
-Node *ArbolClan::buscarLider(Node *actual){
-    if (actual == nullptr)
+void ArbolClan::verificarEdadLider() {
+    Node* lider = buscarLider(root);
+    if (lider != nullptr && lider->age > 70 && !lider->is_dead) {
+        cout << "\nEl lider actual ha superado los 70 anios. Transferiendo liderazgo..." << endl;
+        asesinarLider();
+    }
+}
+
+Node *ArbolClan::buscarLider(Node *liderActual){
+    if (liderActual == nullptr)
         return nullptr;
-    if (actual->is_chief)
-        return actual;
-    Node *chief = buscarLider(actual->left);
+    if (liderActual->is_chief)
+        return liderActual;
+    Node *chief = buscarLider(liderActual->left);
     if (chief == nullptr)
-        chief = buscarLider(actual->right);
+        chief = buscarLider(liderActual->right);
     return chief;
 }
 
-Node *ArbolClan::buscarSucesor(Node *actual) {
-    if (actual == nullptr) return nullptr;
-    if (!actual->is_dead && actual->gender == 'M') return actual;
-    Node* sucesor = buscarSucesor(actual->left);
-    if (sucesor == nullptr) sucesor = buscarSucesor(actual->right);
+Node *ArbolClan::buscarSucesor(Node *liderActual) {
+    if (liderActual == nullptr) return nullptr;
+    if (!liderActual->is_dead && liderActual->gender == 'M') return liderActual;
+    Node* sucesor = buscarSucesor(liderActual->left);
+    if (sucesor == nullptr) sucesor = buscarSucesor(liderActual->right);
     return sucesor;
 }
 
@@ -308,7 +317,7 @@ Node *ArbolClan::ancestroConDosHijos(Node *liderActual) {
     while (current != nullptr) {
         Node *padre = buscarNodo(root, current->id_father);
         if (padre == nullptr) {
-            return nullptr; // Llegamos a la raíz sin encontrar ancestro con dos hijos
+            return nullptr; 
         }
 
         // Verificar si el padre tiene dos hijos
@@ -322,26 +331,25 @@ Node *ArbolClan::ancestroConDosHijos(Node *liderActual) {
     return nullptr;
 }
 
-
 void ArbolClan::mostrarMiembros() {
     cout << "Lista de todos los miembros de la familia real:" << endl;
     mostrarMiembrosClan(root);
 }
 
-void ArbolClan::mostrarMiembrosClan(Node* actual) {
-    if (actual == nullptr) return;
+void ArbolClan::mostrarMiembrosClan(Node* liderActual) {
+    if (liderActual == nullptr) return;
 
-    cout << "ID: " << actual->id << ", Nombre: " << actual->name << " " << actual->last_name
-        << ", Genero: " << actual->gender << ", Edad: " << actual->age
-        << ", ID Padre: " << actual->id_father << ", Muerto: " << (actual->is_dead ? "Si" : "No")
-        << ", Fue Lider: " << (actual->was_chief ? "Si" : "No") 
-        << ", Es Lider: " << (actual->is_chief ? "Si" : "No") << endl;
+    cout << "ID: " << liderActual->id << ", Nombre: " << liderActual->name << " " << liderActual->last_name
+        << ", Genero: " << liderActual->gender << ", Edad: " << liderActual->age
+        << ", ID Padre: " << liderActual->id_father << ", Muerto: " << (liderActual->is_dead ? "Si" : "No")
+        << ", Fue Lider: " << (liderActual->was_chief ? "Si" : "No") 
+        << ", Es Lider: " << (liderActual->is_chief ? "Si" : "No") << endl;
 
-    mostrarMiembrosClan(actual->left);
-    mostrarMiembrosClan(actual->right);
+    mostrarMiembrosClan(liderActual->left);
+    mostrarMiembrosClan(liderActual->right);
 }
 
-void ArbolClan::actualizarDatos(int id, const string &name, const string &last_name, char gender, int age, bool is_dead, bool was_chief, bool is_chief){
+void ArbolClan::liderActualizarDatos(int id, const string &name, const string &last_name, char gender, int age, bool is_dead, bool was_chief, bool is_chief){
     Node *node = buscarNodo(root, id);
     if (node == nullptr){
         cout << "Miembro con ID " << id << " no encontrado" << endl;
@@ -356,23 +364,23 @@ void ArbolClan::actualizarDatos(int id, const string &name, const string &last_n
     node->was_chief = was_chief;
     node->is_chief = is_chief;
 
-    cout << "Datos actualizados para el nodo con ID " << id << ":" << endl;
+    cout << "Datos liderActualizados para el nodo con ID " << id << ":" << endl;
     cout << "Nombre: " << node->name << " " << node->last_name << endl;
-    cout << "Género: " << node->gender << endl;
+    cout << "Genero: " << node->gender << endl;
     cout << "Edad: " << node->age << endl;
     cout << "Muerto: " << node->is_dead << endl;
     cout << "Fue Lider: " << node->was_chief << endl;
     cout << "Es Lider: " << node->is_chief << endl;
 }
 
-Node *ArbolClan::buscarNodo(Node *actual, int id){
-    if (actual == nullptr)
+Node *ArbolClan::buscarNodo(Node *liderActual, int id){
+    if (liderActual == nullptr)
         return nullptr;
-    if (actual->id == id)
-        return actual;
-    Node *found = buscarNodo(actual->left, id);
+    if (liderActual->id == id)
+        return liderActual;
+    Node *found = buscarNodo(liderActual->left, id);
     if (found == nullptr)
-        found = buscarNodo(actual->right, id);
+        found = buscarNodo(liderActual->right, id);
     return found;
 }
 
@@ -399,7 +407,7 @@ void ArbolClan::cargarContribuidores(Node* node, const string &filename) {
     }
 
     string line;
-    getline(file, line); // Saltar cabecera
+    getline(file, line); 
 
     while (getline(file, line)) {
         stringstream ss(line);
@@ -424,7 +432,6 @@ void ArbolClan::cargarContribuidores(Node* node, const string &filename) {
 
             Contribuidor* nuevoContribuidor = new Contribuidor(name, age, id, desc, grade);
 
-            // Insertar ordenado
             if (node->contribuidores == nullptr) {
                 node->contribuidores = nuevoContribuidor;
             } else {
@@ -452,7 +459,6 @@ void ArbolClan::cargarContribuidores(Node* node, const string &filename) {
 void ArbolClan::cargarTodosContribuidores(const string &filename) {
     if (root == nullptr) return;
     
-    // Usaremos un enfoque iterativo para recorrer el árbol
     Node* current = root;
     Node* prev = nullptr;
 
@@ -482,18 +488,18 @@ void ArbolClan::mostrarContribuidores(Node* node) {
     cout << "Nombre\tEdad\tID\tContribucion\t\tGrado" << endl;
     cout << "--------------------------------------------------" << endl;
 
-    Contribuidor* actual = node->contribuidores;
-    while (actual != nullptr) {
-        cout << actual->name << "\t" << actual->age << "\t" << actual->id << "\t"
-             << actual->descripcion << "\t" << actual->grado_contribucion << endl;
-        actual = actual->next;
+    Contribuidor* liderActual = node->contribuidores;
+    while (liderActual != nullptr) {
+        cout << liderActual->name << "\t" << liderActual->age << "\t" << liderActual->id << "\t"
+             << liderActual->descripcion << "\t" << liderActual->grado_contribucion << endl;
+        liderActual = liderActual->next;
     }
 }
 
 void ArbolClan::mostrarContribuidoresLider() {
     Node* lider = buscarLider(root);
     if (lider == nullptr) {
-        cout << "No hay un lider actual." << endl;
+        cout << "No hay un lider liderActual." << endl;
         return;
     }
     mostrarContribuidores(lider);
@@ -507,11 +513,11 @@ int main(){
     int opcion;
     do {
         cout << "\nMENU DE OPCIONES:\n";
-        cout << "1. Imprimir linea de sucesion actual \n";
-        cout << "2. Imprimir lider actual y sucesor\n";
+        cout << "1. Imprimir linea de sucesion liderActual \n";
+        cout << "2. Imprimir lider liderActual y sucesor\n";
         cout << "3. Asesinar al lider y asignar nuevo\n";
         cout << "4. Imprimir todos los miembros del clan\n";
-        cout << "5. Actualizar datos de un Nodo\n";
+        cout << "5. liderActualizar datos de un Nodo\n";
         cout << "6. Visualizar lista de contribuidores al clan\n";
         cout << "7. Salir\n";
         cout << "Seleccione una opcion: ";
@@ -519,10 +525,10 @@ int main(){
 
         switch (opcion) {
             case 1:
-                clan.mostrarSucesionActual();
+                clan.mostrarSucesionliderActual();
                 break;
             case 2:
-                clan.mostrarLiderActual_Sucesor();
+                clan.mostrarliderActual_Sucesor();
                 break;
             case 3:
                 clan.asesinarLider();
@@ -537,7 +543,7 @@ int main(){
                 int age;
                 bool is_dead, was_chief, is_chief;
 
-                cout << "Ingrese el ID del nodo a actualizar: ";
+                cout << "Ingrese el ID del nodo a liderActualizar: ";
                 cin >> id;
                 cout << "Ingrese el nuevo nombre: ";
                 cin >> name;
@@ -554,7 +560,7 @@ int main(){
                 cout << "Es lider? (1 para si, 0 para no): ";
                 cin >> is_chief;
 
-                clan.actualizarDatos(id, name, last_name, gender, age, is_dead, was_chief, is_chief);
+                clan.liderActualizarDatos(id, name, last_name, gender, age, is_dead, was_chief, is_chief);
                 break;
             }
             case 6:
