@@ -513,11 +513,11 @@ int main(){
     int opcion;
     do {
         cout << "\nMENU DE OPCIONES:\n";
-        cout << "1. Imprimir linea de sucesion liderActual \n";
-        cout << "2. Imprimir lider liderActual y sucesor\n";
+        cout << "1. Imprimir linea de sucesion actual \n";
+        cout << "2. Imprimir lider actual y sucesor\n";
         cout << "3. Asesinar al lider y asignar nuevo\n";
         cout << "4. Imprimir todos los miembros del clan\n";
-        cout << "5. liderActualizar datos de un Nodo\n";
+        cout << "5. Actualizar datos de un nodo\n";
         cout << "6. Visualizar lista de contribuidores al clan\n";
         cout << "7. Salir\n";
         cout << "Seleccione una opcion: ";
